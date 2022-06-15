@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 
 import WelcomeScreen from "../../components/WelcomeScreen";
 import Sidebar from "../../components/Sidebar";
+import WeekEvents from "../../components/WeekEvents";
 
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/storage';
 import 'firebase/auth';
-import firebaseConfig from '../../Firebase/FirebaseConfig.js'
+import firebaseConfig from '../../Firebase/FirebaseConfig.js';
+
+import styles from "./styles.module.scss";
 
 export default function Home() {
 
@@ -37,8 +40,10 @@ export default function Home() {
   if (userIsLogged) {
 
     return(
-      <body>
+      <body className={styles.bodyHome}>
         <Sidebar />
+
+        <WeekEvents />
       </body>
     )
 
