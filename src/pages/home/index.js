@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import WelcomeScreen from "../../components/welcomeScreen";
+import WelcomeScreen from "../../components/WelcomeScreen";
+import Sidebar from "../../components/Sidebar";
 
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -26,20 +27,19 @@ export default function Home() {
     onAuthStateChanged();
   }, []);
 
-  function signOut() {
-    firebase.auth().signOut()
-    localStorage.setItem('uid', '')
+  // function signOut() {
+  //   firebase.auth().signOut()
+  //   localStorage.setItem('uid', '')
 
-    window.location.reload();
-  }
+  //   window.location.reload();
+  // }
 
   if (userIsLogged) {
 
     return(
-      <div>
-        <h1>Logado</h1>
-        <button onClick={signOut}>Sair</button>
-      </div>
+      <body>
+        <Sidebar />
+      </body>
     )
 
   } else {
