@@ -1,9 +1,19 @@
 @import '../../global.scss';
 
-#btnCreateEvent {
-    background-color: $purple;
+.eventModal {
 
-    color: #fff;
+    max-height: 90%;
+    overflow-y: scroll;
+
+    .calendarContainer {
+        margin-bottom: 1rem;
+    }
+
+    #btnCreateEvent {
+        background-color: $purple;
+    
+        color: #fff;
+    }
+
 }
 
-    
