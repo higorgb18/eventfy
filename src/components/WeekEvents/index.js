@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import dayjs from 'dayjs';
-import 'dayjs/locale/pt-br' // import locale
+import 'dayjs/locale/pt-br'
 
 import firebase from "firebase/app";
 import "firebase/database";
@@ -46,7 +46,7 @@ export default function WeekEvents() {
     }, []);
 
     return (
-        <body className={styles.bodyWeekEvents}>
+        <section className={styles.bodyWeekEvents}>
             <div className={styles.textInformation}>
                 <h3>Olá, <b>{dataAccount.name}</b></h3>
                 <h1>Esse são seus eventos da semana <b>.</b></h1>
@@ -73,6 +73,6 @@ export default function WeekEvents() {
                 </div>
                
             </div>
-        </body>
+        </section>
     )
 }

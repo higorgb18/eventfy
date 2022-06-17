@@ -13,4 +13,26 @@ $dark-purple: #602E91;
 
 $light-grey: #c2c4c7;
 $grey: #F6F5FA;
-$dark-grey: #575757;
+$dark-grey: #7c7c7c;
+
+
+:root {
+    * {
+      scrollbar-width: auto;
+      scrollbar-color: $purple #ffffff;
+    }
+  
+    *::-webkit-scrollbar {
+      width: 12px;
+    }
+  
+    *::-webkit-scrollbar-track {
+      background: #ffffff;
+    }
+  
+    *::-webkit-scrollbar-thumb {
+      background-color: $purple;
+      border-radius: 10px;
+      border: 3px solid #ffffff;
+    }
+  }

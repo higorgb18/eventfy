@@ -92,29 +92,29 @@ export default function CreateAccount() {
                 <form className={styles.formRegister}>
                     <div className={styles.nameWrapper}>
                         <div className={styles.inputWrapper}>
-                            <label for="inputName">Nome</label>
-                            <input type="text" id="inputName" name="name" onChange={handleInputRegister}  placeholder="Nome" required="true" />
+                            <label htmlFor="inputName">Nome</label>
+                            <input type="text" id="inputName" name="name" onChange={handleInputRegister}  placeholder="Nome" required={true} />
                         </div>
         
                         <div className={styles.inputWrapper}>
-                            <label for="inputSurname">Sobrenome</label>
-                            <input type="text" id="inputSurname" name="surname" onChange={handleInputRegister} placeholder="Sobrenome" required="true" />
+                            <label htmlFor="inputSurname">Sobrenome</label>
+                            <input type="text" id="inputSurname" name="surname" onChange={handleInputRegister} placeholder="Sobrenome" required={true} />
                         </div>
                     </div>
         
                     <div className={styles.inputWrapper}>
-                        <label for="inputEmail">E-mail</label>
-                        <input type="email" id="inputEmail" name="email" onChange={handleInputRegister} placeholder="E-mail" required="true" />
+                        <label htmlFor="inputEmail">E-mail</label>
+                        <input type="email" id="inputEmail" name="email" onChange={handleInputRegister} placeholder="E-mail" required={true} />
                     </div>
         
                     <div className={styles.inputWrapper}>
-                        <label for="inputPassword">Senha</label>
-                        <input type="password" id="inputPassword" name="password" onChange={handleInputRegister} placeholder="Senha" required="true" />
+                        <label htmlFor="inputPassword">Senha</label>
+                        <input type="password" id="inputPassword" name="password" onChange={handleInputRegister} placeholder="Senha" required={true} />
                     </div>
         
                     <div className={styles.inputWrapper}>
-                        <label for="inputPasswordConfirm">Confirmar senha</label>
-                        <input type="password" id="inputPasswordConfirm" name="passwordConfirm" onChange={handleInputRegister} placeholder="Confirmação de Senha" required="true" />
+                        <label htmlFor="inputPasswordConfirm">Confirmar senha</label>
+                        <input type="password" id="inputPasswordConfirm" name="passwordConfirm" onChange={handleInputRegister} placeholder="Confirmação de Senha" required={true} />
                     </div>
         
                     <button id={styles.btnRegister} type="button" onClick={() => {makeRegister()}}>Cadastrar</button>

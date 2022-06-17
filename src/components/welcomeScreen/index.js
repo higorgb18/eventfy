@@ -67,7 +67,7 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <body className={styles.welcomeScreen}>
+    <div className={styles.welcomeScreen}>
         <div className={styles.leftSideWelcomeContent}>
             <h1>Bem-vindo(a) ao <br /><b>Eventfy!</b></h1>
 
@@ -75,13 +75,13 @@ export default function WelcomeScreen() {
 
             <form className={styles.formSignin}>
               <div className={styles.inputWrapper}>
-                <label for="inputEmail">E-mail</label>
-                <input type="email" name="email" id="inputEmail" onChange={handleInputLogin} placeholder="Insira seu e-mail" required="true" />
+                <label htmlFor="inputEmail">E-mail</label>
+                <input type="email" name="email" id="inputEmail" onChange={handleInputLogin} placeholder="Insira seu e-mail" required={true} />
               </div>
 
               <div className={styles.inputWrapper}>
-                <label for="inputPassword">Senha</label>
-                <input type="password" name="password" id="inputPassword" onChange={handleInputLogin} placeholder="Insira sua senha" required="true" />
+                <label htmlFor="inputPassword">Senha</label>
+                <input type="password" name="password" id="inputPassword" onChange={handleInputLogin} placeholder="Insira sua senha" required={true} />
               </div>
 
               <Link to="recuperarSenha">Esqueci a senha</Link>
@@ -110,7 +110,7 @@ export default function WelcomeScreen() {
         <div className={styles.rightSideWelcomeContent}>
             <img src={illustration} alt="Ilustração de um homem de terno apontando para um celular com calendário" />
         </div>
-    </body>
+    </div>
   )
 
 }
