@@ -9,9 +9,9 @@
         margin-bottom: 1rem;
     }
 
-    #listUsers {
+    #listUsers, #selectStatus {
 
-        #users {
+        #users, #status {
             margin-bottom: 0;
             padding-top: 0;
             padding-bottom: 0;
@@ -30,7 +30,11 @@
 
     #btnCreateEvent, #btnAddParticipant {
         background-color: $purple;
-    
+        color: #fff;
+    }
+
+    #btnDeleteEvent {
+        background-color: rgb(204, 70, 70);
         color: #fff;
     }
 

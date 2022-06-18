@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-// import firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
 import "firebase/auth";
@@ -11,25 +11,34 @@ import styles from "./styles.module.scss";
 
 export default function UserEvents(props) {
 
-    // const [dataAccount, setDataAccount] = useState([]);
-    const handleModalState = props.state;
+    const [dataUserEvents, setDataUserEvents] = useState([]);
 
-    // useEffect(() => {
+    const handleModalState = props.createModalState;
+    const handleEditModalState = props.editModalState;
 
-    //     const userId = localStorage.getItem('uid');
-    //     const dbRef = firebase.database().ref();
+    function getData(calendarEvent) {
+        props.setModalData(calendarEvent)
+        handleEditModalState()
+    }
 
-    //     dbRef.child("users").child(userId).get().then((snapshot) => {
-    //         if (snapshot.exists()) {
-    //             setDataAccount(snapshot.val());
-    //         } else {
-    //             console.log("No data available");
-    //         }
-    //     }).catch((error) => {
-    //         console.error(error);
-    //     });
+    useEffect(() => {
 
-    // }, []);
+        const userId = localStorage.getItem('uid');
+        const dbRef = firebase.database().ref();
+
+        dbRef.child("events").child(userId).get().then((snapshot) => {
+            if (snapshot.exists()) {
+                let data = snapshot.val()
+                let temp = Object.keys(data).map((key) => data[key])
+                setDataUserEvents(temp);
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+
+    }, []);
 
     return (
 
@@ -57,33 +66,25 @@ export default function UserEvents(props) {
                     </thead>
                     
                     <tbody>
-                        <tr>
-                            <td>Reunião com o cliente</td>
-                            <td>quarta-feira | 10:00 - 11:00</td>
-                            <td>Higor</td>
-                            <td>Não iniciado</td>
-                        </tr>
+                        {dataUserEvents.map((calendarEvent, index) => (
+                            <tr key={index} onClick={() => getData(calendarEvent)}>
+                                <td>{calendarEvent.description}</td>
 
-                        <tr>
-                            <td>Festa de aniversário da Priscilla Almeida</td>
-                            <td>quinta-feira | 18:00 - 20:00</td>
-                            <td>Higor</td>
-                            <td>Não iniciado</td>
-                        </tr>
+                                {calendarEvent.initialDate.dayAndMonth === calendarEvent.finalDate.dayAndMonth ? (
+                                    <td>{calendarEvent.initialDate.dayAndMonth} - {calendarEvent.initialHour} | {calendarEvent.finalDate.dayAndMonth} - {calendarEvent.finalHour}</td>
+                                ) : (
+                                    <td>{calendarEvent.initialDate.dayAndMonth} | {calendarEvent.initialHour} - {calendarEvent.finalHour}</td>
+                                )}
 
-                        <tr>
-                            <td>Entrega do relatório</td>
-                            <td>quinta-feira | 10:00</td>
-                            <td>Higor</td>
-                            <td>Não iniciado</td>
-                        </tr>
+                                {calendarEvent.eventMembers ? (
+                                    <td>{calendarEvent.eventMembers.map((member, index) => (<span key={index}>{(index ? ', ' : '') + member}</span>))}</td>
+                                ) : (
+                                    <td>Sem membros convidados</td>
+                                )}
 
-                        <tr>
-                            <td>Reunião com o cliente</td>
-                            <td>quarta-feira | 10:00 - 11:00</td>
-                            <td>Higor</td>
-                            <td>Não iniciado</td>
-                        </tr>
+                                <td>Não iniciado</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

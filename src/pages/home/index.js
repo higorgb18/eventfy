@@ -14,11 +14,25 @@ import firebaseConfig from '../../Firebase/FirebaseConfig.js';
 
 
 import styles from "./styles.module.scss";
+import EditEventModal from '../../components/EditEventModal';
 
 export default function Home() {
 
   const [userIsLogged, setUserIsLogged] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  const [modalData, setModalData] = useState({
+    creatorId: '',
+    description: '',
+    eventId: '',
+    eventMembers: [],
+    finalDate: [],
+    finalHour: '',
+    initialDate: [],
+    initialHour: '',
+    timestamp: ''
+  })
 
   function onAuthStateChanged() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -34,16 +48,13 @@ export default function Home() {
     onAuthStateChanged();
   }, []);
 
-  function handleModalState() {
-    setOpenModal(!openModal)
+  function handleCreateModalState() {
+    setOpenCreateModal(!openCreateModal)
   }
 
-  // function signOut() {
-  //   firebase.auth().signOut()
-  //   localStorage.setItem('uid', '')
-
-  //   window.location.reload();
-  // }
+  function handleEditModalState() {
+    setOpenEditModal(!openEditModal)
+  }
 
   if (userIsLogged) {
 
@@ -51,12 +62,13 @@ export default function Home() {
       <main className={styles.bodyHome}>
         <Sidebar />
 
-        <NewEventModal isOpen={openModal} state={handleModalState}/>
+        <NewEventModal isOpen={openCreateModal} createModalState={handleCreateModalState}/>
+        <EditEventModal isOpen={openEditModal} editModalState={handleEditModalState} modalData={modalData}/>
 
           <article>
             <WeekEvents />
 
-            <UserEvents state={handleModalState}/>
+            <UserEvents createModalState={handleCreateModalState} editModalState={handleEditModalState} setModalData={setModalData}/>
           </article>
       </main>
     )

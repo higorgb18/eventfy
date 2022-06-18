@@ -20,6 +20,7 @@ export default function WeekEvents() {
     dayjs.locale('pt-br');
 
     const [dataAccount, setDataAccount] = useState([]);
+    const [dataUserEvents, setDataUserEvents] = useState([]);
     const [date, setDate] = useState(dayjs().format('dddd, D [de] MMMM - HH:mm[h]'));
 
     useEffect(() => {
@@ -45,6 +46,25 @@ export default function WeekEvents() {
 
     }, []);
 
+    useEffect(() => {
+
+        const userId = localStorage.getItem('uid');
+        const dbRef = firebase.database().ref();
+
+        dbRef.child("events").child(userId).get().then((snapshot) => {
+            if (snapshot.exists()) {
+                let data = snapshot.val()
+                let temp = Object.keys(data).map((key) => data[key])
+                setDataUserEvents(temp);
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+
+    }, []);
+
     return (
         <section className={styles.bodyWeekEvents}>
             <div className={styles.textInformation}>
@@ -54,24 +74,13 @@ export default function WeekEvents() {
             </div>
             
             <div className={styles.weekEvents}>
-                <div className={styles.cardEvent}>
-                    <span>quarta-feira | 10:00 - 11:00</span>
-                    <p>Reunião com o cliente</p>
+                {dataUserEvents.map((calendarEvent, index) => (
+                    <div key={index} className={styles.cardEvent}>
+                    <span>{calendarEvent.initialDate.dayOfTheWeek} | {calendarEvent.initialHour} - {calendarEvent.finalHour}</span>
+                    <p>{calendarEvent.description}</p>
                     <DotsThree size={32} weight="fill" />
                 </div>
-
-                <div className={styles.cardEvent}>
-                    <span>quinta-feira | 18:00 - 20:00</span>
-                    <p>Festa de aniversário da Priscilla Almeida</p>
-                    <DotsThree size={32} weight="fill" />
-                </div>
-
-                <div className={styles.cardEvent}>
-                    <span>quinta-feira | 10:00</span>
-                    <p>Entrega do relatório</p>
-                    <DotsThree size={32} weight="fill" />
-                </div>
-               
+                ))}
             </div>
         </section>
     )

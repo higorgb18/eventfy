@@ -1,4 +1,4 @@
-@import '../../global.scss';
+@import '../../styles/global.scss';
 
 .sectionUserEvents {
     display: flex;
@@ -53,11 +53,20 @@
 
             tr {
 
+                cursor: pointer;
+
+                transition: all 0.2s ease-in-out;
+
                 td {
                     padding: 1rem;
 
                     border-bottom: 1px solid #e4e4e4;
                 }
+
+                &:hover {
+                    background-color: $light-purple;
+                }
+
             }
 
         }
