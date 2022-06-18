@@ -70,10 +70,10 @@ export default function UserEvents(props) {
                             <tr key={index} onClick={() => getData(calendarEvent)}>
                                 <td>{calendarEvent.description}</td>
 
-                                {calendarEvent.initialDate.dayAndMonth === calendarEvent.finalDate.dayAndMonth ? (
-                                    <td>{calendarEvent.initialDate.dayAndMonth} - {calendarEvent.initialHour} | {calendarEvent.finalDate.dayAndMonth} - {calendarEvent.finalHour}</td>
+                                {calendarEvent.initialDate.dayAndMonth !== calendarEvent.finalDate.dayAndMonth ? (
+                                    <td>{calendarEvent.initialDate.dayAndMonth} - {calendarEvent.initialHour}h | {calendarEvent.finalDate.dayAndMonth} - {calendarEvent.finalHour}h</td>
                                 ) : (
-                                    <td>{calendarEvent.initialDate.dayAndMonth} | {calendarEvent.initialHour} - {calendarEvent.finalHour}</td>
+                                    <td>{calendarEvent.initialDate.dayAndMonth} | {calendarEvent.initialHour} - {calendarEvent.finalHour}h</td>
                                 )}
 
                                 {calendarEvent.eventMembers ? (

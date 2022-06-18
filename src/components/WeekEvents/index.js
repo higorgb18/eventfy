@@ -76,7 +76,11 @@ export default function WeekEvents() {
             <div className={styles.weekEvents}>
                 {dataUserEvents.map((calendarEvent, index) => (
                     <div key={index} className={styles.cardEvent}>
-                    <span>{calendarEvent.initialDate.dayOfTheWeek} | {calendarEvent.initialHour} - {calendarEvent.finalHour}</span>
+                    {calendarEvent.initialDate.dayAndMonth !== calendarEvent.finalDate.dayAndMonth ? (
+                        <span>{calendarEvent.initialDate.dayOfTheWeek} - {calendarEvent.initialHour}h | {calendarEvent.finalDate.dayAndMonth} - {calendarEvent.finalHour}h</span>
+                    ) : (
+                        <span>{calendarEvent.initialDate.dayAndMonth} | {calendarEvent.initialHour} - {calendarEvent.finalHour}h</span>
+                    )}
                     <p>{calendarEvent.description}</p>
                     <DotsThree size={32} weight="fill" />
                 </div>

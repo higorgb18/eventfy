@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Calendar from 'react-calendar';
 
@@ -21,7 +21,7 @@ export default function EditEventModal(props) {
 
     const [date, setDate] = useState(new Date());
     const [selectedParticipant, setSelectedParticipant] = useState('');
-    const [eventParticipants, setEventParticipants] = useState(modalData.eventMembers);
+    const [eventParticipants, setEventParticipants] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState('');
 
     const [eventTextChangeData, setEventTextChangeData] = useState({
@@ -29,6 +29,10 @@ export default function EditEventModal(props) {
         initialHour: '',
         finalHour: '',
     })
+
+    useEffect(() => {
+        setEventParticipants(modalData.eventMembers)
+    }, [modalData])
 
     function handleInputChange(event) {
 
