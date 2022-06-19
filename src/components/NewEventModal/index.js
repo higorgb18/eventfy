@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Calendar from 'react-calendar';
 
@@ -9,6 +9,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
 import "firebase/auth";
+import firebaseConfig from '../../Firebase/FirebaseConfig.js';
 
 import styles from "./styles.module.scss";
 import 'react-calendar/dist/Calendar.css';
@@ -19,6 +20,7 @@ export default function NewEventModal(props) {
     const isOpen = props.isOpen
     const handleCreateModalState = props.createModalState
 
+    const [friendsList, setFriendsList] = useState([]);
     const [date, setDate] = useState(new Date());
     const [selectedParticipant, setSelectedParticipant] = useState('');
     const [eventParticipants, setEventParticipants] = useState([]);
@@ -28,6 +30,30 @@ export default function NewEventModal(props) {
         initialHour: '',
         finalHour: '',
     })
+
+    useEffect(() => {
+
+        const userId = localStorage.getItem('uid');
+        let firebaseRef = firebase.database().ref('users/').child(userId);
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        firebaseRef.on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                let data = snapshot.val();
+
+                if (data.friends) {
+                    let temp = Object.keys(data.friends).map((key) => data.friends[key]);
+                    setFriendsList(temp);
+                }
+                
+            } else {
+                console.log('No data available');
+            }
+        });
+    }, []);
 
     function handleInputChange(event) {
 
@@ -40,7 +66,10 @@ export default function NewEventModal(props) {
     }
 
     function handleSelectedParticipant(event) {
-        setSelectedParticipant(event.target.value)
+        setSelectedParticipant({
+            friendInfo: friendsList[event.target.value],
+            pending: true
+        })
     }
 
     function selectParticipants() {
@@ -52,6 +81,23 @@ export default function NewEventModal(props) {
 
         setEventParticipants(membersList)
     }
+
+    // function sendParticipationRequest(friendId, eventId, eventName) {
+        
+    //     const participationRequestId = firebase.database().ref().child('posts').push().key;
+
+    //     firebase.database().ref('users/').child(friendId).child('participationRequest/' + participationRequestId).set({
+    //         requestId: participationRequestId,
+    //         requesterId: dataProfile.id,
+    //         requesterName: dataProfile.name + ' ' + dataProfile.surname,
+    //         eventId: eventId,
+    //         eventName: eventName
+    //     }).catch((error) => {
+    //         if (error) {
+    //             alert('Desculpe, ocorreu um erro ao enviar o convite de participação do evento, tente novamente!');
+    //         }
+    //     })
+    // }
 
     function removeParticipants(index) {
         let membersList = [...eventParticipants]
@@ -78,7 +124,7 @@ export default function NewEventModal(props) {
         const id = firebase.database().ref().child('posts').push().key;
         const eventCreatorId = localStorage.getItem('uid')
 
-        firebase.database().ref('events/').child(eventCreatorId).child(id).set({
+        firebase.database().ref('events/').child(id).set({
             eventId: id,
             creatorId: eventCreatorId,
             description: eventTextData.description,
@@ -89,8 +135,10 @@ export default function NewEventModal(props) {
             eventMembers: eventParticipants,
             status: ''
         }).then(() => {
+
             alert('Evento criado com sucesso!');
             window.location.reload();
+
         }).catch((error) => {
             if (error) {
                 alert('Desculpe, ocorreu um erro ao criar o seu evento, tente novamente!');
@@ -138,10 +186,9 @@ export default function NewEventModal(props) {
 
                             <select id={styles.users} className="form-select form-floating mb-3" aria-label="select" defaultValue="" onChange={handleSelectedParticipant}>
                                 <option value="" disabled>Adicionar participantes</option>
-                                <option value="Roberto">Roberto</option>
-                                <option value="Marcelo">Marcelo</option>
-                                <option value="Luísa">Luísa</option>
-                                <option value="Rebeca">Rebeca</option>
+                                {friendsList.map((friend, index) => (
+                                    <option key={index} value={index}>{friend.friendName}</option>
+                                ))}
                             </select>
 
                             <button id={styles.btnAddParticipant} className="w-50 mb-2 d-block btn btn-sm rounded-3" type="button" style={{display: selectedParticipant !== '' ? 'flex' : 'none'}} onClick={() => selectParticipants()}>Adicionar participante</button>
@@ -154,7 +201,7 @@ export default function NewEventModal(props) {
                                         <span 
                                             key={index} 
                                             onClick={() => removeParticipants(index)}>
-                                            {(index ? ', ' : '') + participant}
+                                            {(index ? ', ' : '') + participant.friendInfo.friendName}
                                         </span>
                                     ))}
                                 </small>

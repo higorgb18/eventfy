@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { House, Calendar, Users, Bell, Gear, Envelope, Lightning, CaretCircleRight  } from 'phosphor-react';
-// import { Link, Navigate } from 'react-router-dom';
+
+import firebase from "firebase/app";
+import "firebase/database";
+import "firebase/storage";
+import "firebase/auth";
 
 import styles from "./styles.module.scss";
 
 export default function Sidebar() {
 
     const [active, setActive] = useState(true);
+    const [dataAccount, setDataAccount] = useState([]);
 
-    // const options = [
-    //     {
-    //         title: 'Início',
-    //         src: '',
-    //         link: '/',
-    //     },
-    //     {
-    //         title: 'Eventos',
-    //         src: '',
-    //         link: '/',
-    //     },
-    //     {
-    //         title: 'Pessoas',
-    //         src: '',
-    //         link: '/',
-    //     }
-    // ]
+    useEffect(() => {
+
+        const userId = localStorage.getItem('uid');
+        const dbRef = firebase.database().ref();
+
+        dbRef.child("users").child(userId).get().then((snapshot) => {
+            if (snapshot.exists()) {
+                setDataAccount(snapshot.val());
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+
+    }, []);
 
     return(
         <aside className={`${styles.sidebar} ${active ? styles.active : styles.inactive}`}>
@@ -54,7 +58,7 @@ export default function Sidebar() {
                 <hr />
 
                 <li>
-                    <Link to="pessoas">
+                    <Link to="/pessoas">
                         <Users size={24} color="#757B84" weight="bold" />
                         <span>Pessoas</span>
                     </Link>
@@ -84,10 +88,10 @@ export default function Sidebar() {
                 </li>
                 
                 <div className={styles.userWrapper}>
-                    <img src="https://i.pinimg.com/550x/25/a6/9a/25a69a97952927b0aad0227173e9af8f.jpg" alt="" />
+                    <img src="https://supermentor.com.br/assets/images/default-profile.png" alt="" />
 
                     <div className={styles.textWrapper}>
-                        <span>Higor <br />Brandão</span>
+                        <span>{dataAccount.name} <br />{dataAccount.surname}</span>
                     </div>
                 </div>
             </ul>

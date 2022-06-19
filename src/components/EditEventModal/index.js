@@ -9,6 +9,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
 import "firebase/auth";
+import firebaseConfig from '../../Firebase/FirebaseConfig.js';
 
 import styles from "./styles.module.scss";
 import 'react-calendar/dist/Calendar.css';
@@ -23,6 +24,7 @@ export default function EditEventModal(props) {
     const [selectedParticipant, setSelectedParticipant] = useState('');
     const [eventParticipants, setEventParticipants] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState('');
+    const [friendsList, setFriendsList] = useState([]);
 
     const [eventTextChangeData, setEventTextChangeData] = useState({
         description: '',
@@ -33,6 +35,30 @@ export default function EditEventModal(props) {
     useEffect(() => {
         setEventParticipants(modalData.eventMembers)
     }, [modalData])
+
+    useEffect(() => {
+
+        const userId = localStorage.getItem('uid');
+        let firebaseRef = firebase.database().ref('users/').child(userId);
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        firebaseRef.on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                let data = snapshot.val();
+
+                if (data.friends) {
+                    let temp = Object.keys(data.friends).map((key) => data.friends[key]);
+                    setFriendsList(temp);
+                }
+                
+            } else {
+                console.log('No data available');
+            }
+        });
+    }, []);
 
     function handleInputChange(event) {
 
@@ -98,7 +124,7 @@ export default function EditEventModal(props) {
 
         firebase
         .database()
-        .ref('events/').child(modalData.creatorId).child(modalData.eventId)
+        .ref('events/').child(modalData.eventId)
         .update(eventData)
         .then(() => alert('Evento atualizado com sucesso!'));
 
@@ -109,7 +135,7 @@ export default function EditEventModal(props) {
         const confirm = window.confirm('Tem certeza que deseja excluir esse evento? Ele não poderá ser recuperado após a exclusão!');
 
         if (confirm) {
-            firebase.database().ref('events/').child(modalData.creatorId).child(modalData.eventId).remove();
+            firebase.database().ref('events/').child(modalData.eventId).remove();
             window.location.reload();
         }
     }
@@ -171,10 +197,9 @@ export default function EditEventModal(props) {
 
                             <select id={styles.users} className="form-select form-floating mb-3" aria-label="select" defaultValue="" onChange={handleSelectedParticipant}>
                                 <option value="" disabled>Adicionar participantes</option>
-                                <option value="Roberto">Roberto</option>
-                                <option value="Marcelo">Marcelo</option>
-                                <option value="Luísa">Luísa</option>
-                                <option value="Rebeca">Rebeca</option>
+                                {friendsList.map((friend, index) => (
+                                    <option key={index} value={index}>{friend.friendName}</option>
+                                ))}
                             </select>
 
                             <button id={styles.btnAddParticipant} className="w-50 mb-2 d-block btn btn-sm rounded-3" type="button" style={{display: selectedParticipant !== '' ? 'flex' : 'none'}} onClick={() => selectParticipants()}>Adicionar participante</button>
@@ -187,7 +212,7 @@ export default function EditEventModal(props) {
                                         <span 
                                             key={index} 
                                             onClick={() => removeParticipants(index)}>
-                                            {(index ? ', ' : '') + participant}
+                                            {(index ? ', ' : '') + participant.friendInfo.friendName}
                                         </span>
                                     ))}
                                 </small>

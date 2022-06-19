@@ -7,6 +7,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
 import "firebase/auth";
+import firebaseConfig from '../../Firebase/FirebaseConfig.js';
 
 import { DotsThree } from "phosphor-react";
 // import dot from "../../assets/dot.svg";
@@ -47,22 +48,39 @@ export default function WeekEvents() {
     }, []);
 
     useEffect(() => {
-
+        
+        let firebaseRef = firebase.database().ref('events/');
         const userId = localStorage.getItem('uid');
-        const dbRef = firebase.database().ref();
 
-        dbRef.child("events").child(userId).get().then((snapshot) => {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        firebaseRef.on('value', (snapshot) => {
             if (snapshot.exists()) {
-                let data = snapshot.val()
-                let temp = Object.keys(data).map((key) => data[key])
-                setDataUserEvents(temp);
-            } else {
-                console.log("No data available");
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
+                let data = snapshot.val();
+                let eventInfos = Object.keys(data).map((key) => data[key]);
 
+                let temp = []
+
+                eventInfos.forEach((event) => {
+                    if (event.creatorId === userId) {
+                        temp.push(event)
+                    } else if (event.eventMembers) {
+                        event.eventMembers.forEach((member) => {
+                            if (member.friendInfo.friendId === userId) {
+                                temp.push(event)
+                            }
+                        })
+                    }
+                })
+
+                setDataUserEvents(temp);
+
+            } else {
+                console.log('No data available');
+            }
+        });
     }, []);
 
     return (

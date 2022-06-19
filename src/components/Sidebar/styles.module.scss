@@ -79,13 +79,17 @@
                 width: 100%;
 
                 svg {
-                    min-width: 24px;
+                    min-width: 2vw;
                 }
     
                 span {
                     font-weight: 500;
+                    font-size: 80%;
+
                     color: #757B84;
+
                     margin-left: 1rem;
+
                     user-select: none;
                 }
             }
